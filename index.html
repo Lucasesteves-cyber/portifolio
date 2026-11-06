@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucas Esteves // Console</title>
+<meta name="description" content="Portfólio de Lucas Esteves Menezes — Ciência da Computação (UNICAP), Engenharia de Software e Compiladores.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void-black: #050505;
+  --surface-1: #0d0d0d;
+  --surface-2: #141414;
+  --border-steel: #2a2a2a;
+  --neon-cyan: #00fff2;
+  --neon-magenta: #ff00ff;
+  --neon-amber: #ffb800;
+  --neon-red: #ff0033;
+  --neon-green: #39ff14;
+  --text-primary: #e8e8e8;
+  --text-dim: #8a8a8a;
+  --font-display: 'Orbitron', 'Syncopate', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --space-1: 8px; --space-2: 16px; --space-3: 24px;
+  --space-4: 32px; --space-5: 48px; --space-6: 64px;
+  --shadow-cyan: 4px 4px 0px var(--neon-cyan);
+  --shadow-magenta: 4px 4px 0px var(--neon-magenta);
+  --t-fast: 80ms;
+  --t-snap: 120ms;
+}
+*, *::before, *::after { box-sizing: border-box; border-radius: 0 !important; }
+html { scroll-behavior: auto; }
+body {
+  margin: 0;
+  background: var(--void-black);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+/* textura CRT ambiente */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 100; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: overlay;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(var(--border-steel) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-steel) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.25;
+}
+a { color: var(--neon-cyan); }
+:focus-visible { outline: 2px solid var(--neon-cyan); outline-offset: 2px; }
+::selection { background: var(--neon-magenta); color: var(--void-black); }
+
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--space-2); }
+
+/* ---------- NAV ---------- */
+nav.top {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(5,5,5,0.92);
+  border-bottom: 2px solid var(--border-steel);
+}
+nav.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: 56px; }
+.logo { font-family: var(--font-display); font-weight: 900; letter-spacing: 0.2em; font-size: 14px; color: var(--text-primary); text-decoration: none; }
+.logo span { color: var(--neon-cyan); }
+nav.top ul { display: flex; gap: var(--space-3); list-style: none; margin: 0; padding: 0; }
+nav.top ul a {
+  font-family: var(--font-display); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-dim); text-decoration: none; padding: var(--space-1) 0;
+  transition: color var(--t-fast) steps(2);
+}
+nav.top ul a:hover { color: var(--neon-cyan); text-shadow: 1px 0 var(--neon-magenta), -1px 0 var(--neon-cyan); }
+.status-led { display: inline-flex; align-items: center; gap: var(--space-1); font-size: 11px; color: var(--neon-green); }
+.status-led i { width: 8px; height: 8px; background: var(--neon-green); display: inline-block; animation: blink 1.2s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0.2; } }
+
+/* ---------- HERO ---------- */
+.hero { padding: var(--space-6) 0 var(--space-5); }
+.hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-5); align-items: start; }
+.eyebrow { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.3em; color: var(--neon-magenta); text-transform: uppercase; margin: 0 0 var(--space-2); }
+h1 {
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(36px, 7vw, 76px); line-height: 0.95; letter-spacing: 0.04em; margin: 0 0 var(--space-3);
+}
+h1 .glitch { position: relative; display: inline-block; color: var(--neon-cyan); }
+h1 .glitch::before, h1 .glitch::after { content: attr(data-text); position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; }
+h1 .glitch::before { color: var(--neon-magenta); clip-path: inset(0 0 60% 0); transform: translate(-3px, 0); animation: glitch 3.2s steps(1) infinite; }
+h1 .glitch::after { color: var(--text-primary); clip-path: inset(70% 0 0 0); transform: translate(3px, 0); animation: glitch 2.6s steps(1) infinite reverse; }
+@keyframes glitch {
+  0%, 92%, 100% { transform: translate(0,0); opacity: 0; }
+  93% { transform: translate(-4px, 1px); opacity: 1; }
+  96% { transform: translate(4px, -1px); opacity: 1; }
+}
+.prism { height: 4px; width: 100%; max-width: 420px; margin: 0 0 var(--space-3);
+  background: linear-gradient(90deg, #ff0033, #ffb800, #39ff14, #00fff2, #3b5bff, #ff00ff); }
+.lead { font-size: 17px; color: var(--text-primary); max-width: 56ch; margin: 0 0 var(--space-4); }
+.lead b { color: var(--neon-cyan); font-weight: 500; }
+.cta { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.btn-industrial {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: 12px var(--space-3);
+  border: 2px solid var(--neon-cyan);
+  background: var(--surface-1);
+  color: var(--neon-cyan);
+  font-family: var(--font-display); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; cursor: pointer;
+  box-shadow: var(--shadow-cyan);
+  transition: transform var(--t-fast) steps(2), box-shadow var(--t-fast) steps(2);
+}
+.btn-industrial:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px var(--neon-magenta); text-shadow: 1px 0 var(--neon-magenta), -1px 0 var(--neon-cyan); }
+.btn-industrial:active { transform: translate(4px, 4px); box-shadow: none; }
+.btn-industrial.alt { border-color: var(--neon-magenta); color: var(--neon-magenta); box-shadow: var(--shadow-magenta); }
+.btn-industrial.alt:hover { box-shadow: 2px 2px 0px var(--neon-cyan); }
+
+/* ID card */
+.id-card { border: 2px solid var(--border-steel); background: var(--surface-1); box-shadow: 8px 8px 0 var(--surface-2); }
+.id-card .photo { position: relative; aspect-ratio: 1 / 1; border-bottom: 2px solid var(--border-steel); overflow: hidden; background: var(--surface-2); }
+.id-card .photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.15); mix-blend-mode: screen; }
+.id-card .photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(0,255,242,0.25)); }
+.corner { position: absolute; width: 18px; height: 18px; border: 2px solid var(--neon-cyan); z-index: 2; }
+.corner.tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+.corner.br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+.id-card dl { margin: 0; padding: var(--space-2); display: grid; grid-template-columns: auto 1fr; gap: 6px var(--space-2); font-size: 13px; }
+.id-card dt { color: var(--text-dim); text-transform: uppercase; }
+.id-card dd { margin: 0; color: var(--text-primary); }
+.id-card dd.ok { color: var(--neon-green); }
+
+/* ---------- SECTIONS ---------- */
+section { padding: var(--space-6) 0; border-top: 2px solid var(--border-steel); }
+.sec-head { display: flex; align-items: baseline; gap: var(--space-2); margin-bottom: var(--space-4); flex-wrap: wrap; }
+.sec-head .idx { font-family: var(--font-mono); color: var(--neon-magenta); font-size: 13px; }
+h2 { font-family: var(--font-display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; font-size: clamp(22px, 3.5vw, 32px); margin: 0; }
+.sec-head .rule { flex: 1; height: 2px; background: var(--border-steel); min-width: 40px; }
+h3 { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.1em; font-size: 15px; margin: 0 0 var(--space-1); }
+
+/* Terminal */
+.terminal { border: 2px solid var(--border-steel); background: var(--surface-1); box-shadow: var(--shadow-cyan); }
+.terminal-bar { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); border-bottom: 2px solid var(--border-steel); background: var(--surface-2); }
+.terminal-bar i { width: 10px; height: 10px; display: inline-block; }
+.terminal-bar i:nth-child(1) { background: var(--neon-red); }
+.terminal-bar i:nth-child(2) { background: var(--neon-amber); }
+.terminal-bar i:nth-child(3) { background: var(--neon-green); }
+.terminal-bar span { margin-left: auto; font-size: 12px; color: var(--text-dim); }
+.terminal pre { margin: 0; padding: var(--space-3); white-space: pre-wrap; font-family: var(--font-mono); font-size: 14px; line-height: 1.7; }
+.c-cy { color: var(--neon-cyan); } .c-mg { color: var(--neon-magenta); } .c-am { color: var(--neon-amber); } .c-gr { color: var(--neon-green); } .c-dim { color: var(--text-dim); }
+.cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--neon-cyan); vertical-align: -3px; animation: blink 1s steps(2) infinite; }
+
+.about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--space-4); }
+.stat-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); align-content: start; }
+.stat { border: 2px solid var(--border-steel); padding: var(--space-2); background: var(--surface-1); }
+.stat b { display: block; font-family: var(--font-display); font-size: 34px; color: var(--neon-cyan); line-height: 1.1; }
+.stat span { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat.wide { grid-column: 1 / -1; }
+.stat.wide b { font-size: 18px; color: var(--text-primary); }
+
+/* Projetos */
+.projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+.proj {
+  position: relative; display: flex; flex-direction: column; gap: var(--space-2);
+  border: 2px solid var(--border-steel); background: var(--surface-1); padding: var(--space-3);
+  transition: border-color var(--t-fast) steps(2), transform var(--t-fast) steps(2), box-shadow var(--t-fast) steps(2);
+}
+.proj:hover { border-color: var(--neon-cyan); transform: translate(-2px, -2px); box-shadow: var(--shadow-cyan); }
+.proj.featured { grid-column: 1 / -1; border-color: var(--neon-magenta); box-shadow: var(--shadow-magenta); }
+.proj.featured:hover { box-shadow: 6px 6px 0 var(--neon-magenta); }
+.proj-top { display: flex; justify-content: space-between; gap: var(--space-2); align-items: center; font-size: 12px; color: var(--text-dim); }
+.proj-top .lang { color: var(--neon-amber); }
+.proj p { margin: 0; color: var(--text-primary); }
+.proj ul { margin: 0; padding-left: var(--space-2); color: var(--text-dim); font-size: 13px; }
+.proj ul li::marker { content: "▪ "; color: var(--neon-cyan); }
+.tags { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.tag { font-size: 11px; border: 1px solid var(--border-steel); padding: 2px var(--space-1); color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.proj a.go { margin-top: auto; align-self: flex-start; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; }
+.proj a.go:hover { color: var(--neon-magenta); }
+.featured-flag { position: absolute; top: -12px; left: var(--space-3); background: var(--neon-magenta); color: var(--void-black); font-family: var(--font-display); font-size: 10px; font-weight: 700; letter-spacing: 0.2em; padding: 2px var(--space-1); }
+
+/* Skills VU meter */
+.skills { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2) var(--space-5); }
+.skill { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: var(--space-2); font-size: 13px; }
+.skill .name { text-transform: uppercase; letter-spacing: 0.06em; }
+.vu { display: grid; grid-template-columns: repeat(12, 1fr); gap: 3px; height: 14px; }
+.vu i { background: var(--surface-2); border: 1px solid var(--border-steel); }
+.vu i.on { background: var(--neon-cyan); border-color: var(--neon-cyan); }
+.vu i.on.hot { background: var(--neon-amber); border-color: var(--neon-amber); }
+.skill .pct { color: var(--text-dim); text-align: right; }
+
+/* Tabela de cursos */
+table.data { width: 100%; border-collapse: collapse; font-size: 14px; }
+table.data th { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; text-align: left; color: var(--text-dim); padding: var(--space-1) var(--space-2); border-bottom: 2px solid var(--neon-cyan); }
+table.data td { padding: 12px var(--space-2); border-bottom: 1px solid var(--border-steel); transition: transform var(--t-fast) steps(2), color var(--t-fast) steps(2); }
+table.data tr:hover td { color: var(--neon-cyan); }
+table.data tr:hover td:first-child { transform: translateX(6px); }
+.st { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+.st.done { color: var(--neon-green); }
+.st.done::before { content: "■ "; }
+.st.run { color: var(--neon-amber); }
+.st.run::before { content: "▲ "; }
+.cat { color: var(--neon-magenta); font-size: 12px; text-transform: uppercase; }
+
+/* Contato */
+.contact-box { display: grid; grid-template-columns: 1fr auto; gap: var(--space-4); align-items: center; border: 2px solid var(--neon-cyan); padding: var(--space-5) var(--space-4); background: var(--surface-1); box-shadow: 8px 8px 0 var(--neon-magenta); }
+.contact-box h2 { font-size: clamp(24px, 4vw, 40px); margin-bottom: var(--space-2); }
+.contact-box p { margin: 0; color: var(--text-dim); max-width: 52ch; }
+.contact-links { display: flex; flex-direction: column; gap: var(--space-2); }
+
+footer { padding: var(--space-4) 0; border-top: 2px solid var(--border-steel); margin-top: var(--space-6); font-size: 12px; color: var(--text-dim); }
+footer .wrap { display: flex; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width: 860px) {
+  .hero-grid, .about-grid, .projects, .skills, .contact-box { grid-template-columns: 1fr; }
+  .id-card { max-width: 360px; }
+  nav.top ul { display: none; }
+  .proj.featured { grid-column: auto; }
+  table.data .hide-sm { display: none; }
+}
+@media (max-width: 420px) {
+  .skill { grid-template-columns: 84px 1fr 38px; }
+  .contact-box { padding: var(--space-4) var(--space-2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  h1 .glitch::before, h1 .glitch::after { display: none; }
+  .cursor, .status-led i { animation: none; }
+  .btn-industrial:hover { text-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top" aria-label="Principal">
+  <div class="wrap">
+    <a class="logo" href="#top">L<span>/</span>ESTEVES</a>
+    <ul>
+      <li><a href="#sobre">Sobre</a></li>
+      <li><a href="#projetos">Projetos</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#cursos">Cursos</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <span class="status-led"><i></i>ONLINE // REC-PE</span>
+  </div>
+</nav>
+
+<main id="top">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow">// Sys.boot — portfólio v1.0</p>
+        <h1>Lucas<br><span class="glitch" data-text="Esteves">Esteves</span><br>Menezes</h1>
+        <div class="prism" aria-hidden="true"></div>
+        <p class="lead">Estudante de <b>Ciência da Computação</b> na UNICAP. Construo software de baixo nível ao visual: <b>compiladores em C</b>, sistemas orientados a objetos em <b>Java</b> e interfaces web — com interesse crescente em <b>agentes de IA</b>.</p>
+        <div class="cta">
+          <a class="btn-industrial" href="#projetos">▶ Ver projetos</a>
+          <a class="btn-industrial alt" href="https://github.com/Lucasesteves-cyber" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <aside class="id-card" aria-label="Ficha técnica">
+        <div class="photo">
+          <span class="corner tl"></span><span class="corner br"></span>
+          <img src="https://avatars.githubusercontent.com/u/237734849?v=4" alt="Foto de Lucas Esteves Menezes" width="460" height="460">
+        </div>
+        <dl>
+          <dt>Operador</dt><dd>Lucas Esteves Menezes</dd>
+          <dt>Classe</dt><dd>CS Student · Software Eng.</dd>
+          <dt>Base</dt><dd>UNICAP</dd>
+          <dt>Setor</dt><dd>Recife, PE — BR</dd>
+          <dt>Status</dt><dd class="ok">■ Aberto a estágio</dd>
+        </dl>
+      </aside>
+    </div>
+  </header>
+
+  <!-- SOBRE -->
+  <section id="sobre">
+    <div class="wrap">
+      <div class="sec-head"><span class="idx">[01]</span><h2>Sobre</h2><span class="rule"></span></div>
+      <div class="about-grid">
+        <div class="terminal">
+          <div class="terminal-bar"><i></i><i></i><i></i><span>lucas@unicap:~</span></div>
+<pre><span class="c-mg">$</span> whoami
+<span class="c-cy">lucas.esteves</span> — estudante de Ciência da Computação
+<span class="c-mg">$</span> cat foco.txt
+<span class="c-dim">></span> Desenvolvimento de Software
+<span class="c-dim">></span> Algoritmos &amp; Estruturas de Dados
+<span class="c-dim">></span> Construção de Compiladores
+<span class="c-dim">></span> Inteligência Artificial &amp; Agentes
+<span class="c-mg">$</span> echo $MISSAO
+Construir o futuro <span class="c-am">linha por linha</span>.
+<span class="c-mg">$</span> <span class="cursor"></span></pre>
+        </div>
+        <div class="stat-col">
+          <div class="stat"><b>06</b><span>Repositórios públicos</span></div>
+          <div class="stat"><b>04</b><span>Linguagens em uso</span></div>
+          <div class="stat"><b>08</b><span>Cursos &amp; trilhas</span></div>
+          <div class="stat"><b>01</b><span>Compilador escrito</span></div>
+          <div class="stat wide"><b>Java · C · JavaScript · Figma</b><span>Do back-end à interface</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETOS -->
+  <section id="projetos">
+    <div class="wrap">
+      <div class="sec-head"><span class="idx">[02]</span><h2>Projetos</h2><span class="rule"></span></div>
+      <div class="projects">
+
+        <article class="proj featured">
+          <span class="featured-flag">DESTAQUE</span>
+          <div class="proj-top"><span>pokemon-tcg.java</span><span class="lang">■ Java · Swing</span></div>
+          <h3>Pokémon TCG — Java Edition</h3>
+          <p>Jogo de cartas colecionáveis feito em Java puro, com interface gráfica em Swing e integração em tempo real com a PokeAPI. Começou como protótipo de terminal e evoluiu para um jogo completo.</p>
+          <ul>
+            <li>Modo Solo contra um Bot com lógica de decisão própria e modo PvP local</li>
+            <li>Time customizado com qualquer Pokémon da 1ª à 6ª geração (721), com linha evolutiva automática</li>
+            <li>Arquitetura em pacotes: <code>modelo</code>, <code>efeitos</code>, <code>fabrica</code> (Factory) e <code>ui</code></li>
+          </ul>
+          <div class="tags"><span class="tag">POO</span><span class="tag">Swing</span><span class="tag">REST API</span><span class="tag">Factory Pattern</span><span class="tag">~178k bytes de Java</span></div>
+          <a class="go" href="https://github.com/Lucasesteves-cyber/Pokmon-TCG" target="_blank" rel="noopener">Abrir repositório ↗</a>
+        </article>
+
+        <article class="proj">
+          <div class="proj-top"><span>micro-pascal/</span><span class="lang">■ C</span></div>
+          <h3>Micro-Pascal</h3>
+          <p>Compilador para um subconjunto de Pascal escrito em C, com analisador léxico e sintático separados em módulos.</p>
+          <ul>
+            <li>Lexer com ~28 tipos de token (palavras-chave, operadores, literais)</li>
+            <li>Parser descendente para <code>program</code>, <code>var</code>, <code>if</code>, <code>while</code>, <code>read/write</code></li>
+          </ul>
+          <div class="tags"><span class="tag">Compiladores</span><span class="tag">Lexer</span><span class="tag">Parser</span></div>
+          <a class="go" href="https://github.com/Lucasesteves-cyber/Micro-Pascal" target="_blank" rel="noopener">Abrir repositório ↗</a>
+        </article>
+
+        <article class="proj">
+          <div class="proj-top"><span>cybertron-translator/</span><span class="lang">■ HTML · CSS · JS</span></div>
+          <h3>Cybertroniano</h3>
+          <p>Tradutor web temático em interface de terminal: converte texto humano para cifras Autobot e Decepticon, e vice-versa.</p>
+          <ul>
+            <li>Alfabetos de cifra por facção e dicionário de jargões</li>
+            <li>Fluxo em duas telas: seleção de diretriz e tradução</li>
+          </ul>
+          <div class="tags"><span class="tag">Front-end</span><span class="tag">Vanilla JS</span><span class="tag">UI</span></div>
+          <a class="go" href="https://github.com/Lucasesteves-cyber/Cybertroniano" target="_blank" rel="noopener">Abrir repositório ↗</a>
+        </article>
+
+        <article class="proj">
+          <div class="proj-top"><span>atividade-1-gq/</span><span class="lang">■ C</span></div>
+          <h3>Playlist em Lista Encadeada</h3>
+          <p>TADs em C para gerenciar músicas: inserção e remoção no início, fim e em posição, consulta e liberação de memória.</p>
+          <div class="tags"><span class="tag">Estrutura de Dados</span><span class="tag">TAD</span><span class="tag">Ponteiros</span></div>
+          <a class="go" href="https://github.com/Lucasesteves-cyber/Atividade--1-GQ" target="_blank" rel="noopener">Abrir repositório ↗</a>
+        </article>
+
+        <article class="proj">
+          <div class="proj-top"><span>avaliacao-formativa/</span><span class="lang">■ Java</span></div>
+          <h3>Avaliação Formativa</h3>
+          <p>Série de exercícios em Java sobre orientação a objetos, com modelagem da classe <code>Aluno</code> e seis questões resolvidas.</p>
+          <div class="tags"><span class="tag">Java</span><span class="tag">POO</span></div>
+          <a class="go" href="https://github.com/Lucasesteves-cyber/Avalia-o-Formativa" target="_blank" rel="noopener">Abrir repositório ↗</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="wrap">
+      <div class="sec-head"><span class="idx">[03]</span><h2>Stack</h2><span class="rule"></span></div>
+      <div class="skills" id="skills"></div>
+    </div>
+  </section>
+
+  <!-- CURSOS -->
+  <section id="cursos">
+    <div class="wrap">
+      <div class="sec-head"><span class="idx">[04]</span><h2>Cursos &amp; Formação</h2><span class="rule"></span></div>
+      <table class="data">
+        <thead><tr><th>Curso</th><th class="hide-sm">Instituição</th><th class="hide-sm">Área</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Bacharelado em Ciência da Computação</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">Graduação</td><td><span class="st run">Cursando</span></td></tr>
+          <tr><td>Imersão Agentes de IA na Prática</td><td class="hide-sm">Daxus</td><td class="hide-sm cat">IA</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>Engenharia de Prompts e Claude</td><td class="hide-sm">Daxus</td><td class="hide-sm cat">IA</td><td><span class="st run">Em andamento</span></td></tr>
+          <tr><td>Jornada Inteligência Artificial</td><td class="hide-sm">Hashtag Treinamentos</td><td class="hide-sm cat">IA</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>IA para Aprender</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">IA</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>Construção de Compiladores (C)</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">Engenharia</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>Estrutura de Dados Lineares (C/C++)</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">Engenharia</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>Design de Interface e Usabilidade (Figma)</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">Design</td><td><span class="st done">Concluído</span></td></tr>
+          <tr><td>Programação Orientada a Objetos (Java)</td><td class="hide-sm">UNICAP</td><td class="hide-sm cat">Engenharia</td><td><span class="st done">Concluído</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato">
+    <div class="wrap">
+      <div class="contact-box">
+        <div>
+          <p class="eyebrow">// Abrir canal de transmissão</p>
+          <h2>Vamos construir algo?</h2>
+          <p>Estou buscando estágio e projetos em desenvolvimento de software, sistemas e IA. Me chame em qualquer um dos canais.</p>
+        </div>
+        <div class="contact-links">
+          <a class="btn-industrial" href="https://www.linkedin.com/in/lucas-esteves-bb1675365/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn-industrial alt" href="https://github.com/Lucasesteves-cyber" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr">2026</span> Lucas Esteves Menezes</span>
+    <span>EOF // compilado sem warnings</span>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  const skills = [
+    ['Java', 10], ['C', 10], ['C++', 6], ['JavaScript', 7],
+    ['HTML/CSS', 8], ['Tailwind', 5], ['Git/GitHub', 8], ['Figma', 7],
+    ['Compiladores', 7], ['Prompts & IA', 8]
+  ];
+  const host = document.getElementById('skills');
+  for (const [name, lvl] of skills) {
+    const pct = Math.round(lvl / 12 * 100);
+    const segs = Array.from({ length: 12 }, (_, i) =>
+      `<i class="${i < lvl ? 'on' : ''}${i < lvl && i >= 9 ? ' hot' : ''}"></i>`).join('');
+    host.insertAdjacentHTML('beforeend',
+      `<div class="skill" role="img" aria-label="${name}: nível ${lvl} de 12"><span class="name">${name}</span><span class="vu">${segs}</span><span class="pct">${pct}%</span></div>`);
+  }
+</script>
+</body>
+</html>
